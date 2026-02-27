@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="max-width: 450px; margin: 4rem auto;">
+    <div class="card">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <h2 style="font-size: 1.75rem;">Create Account</h2>
+            <p style="color: var(--text-muted);">Start building your professional resume</p>
+        </div>
+
+        <form method="POST" action="{{ url_for('auth.signup') }}">
+            <div class="form-group">
+                <label class="form-label">Full Name</label>
+                <input type="text" name="username" class="form-input" placeholder="John Doe" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" name="email" class="form-input" placeholder="name@example.com" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-input" placeholder="••••••••" required>
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <p style="font-size: 0.75rem; color: var(--text-muted);">
+                    By signing up, you agree to our <a href="#" style="color: var(--primary-color);">Terms of
+                        Service</a> and <a href="#" style="color: var(--primary-color);">Privacy Policy</a>.
+                </p>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.75rem;">Create Account</button>
+        </form>
+
+        <div style="text-align: center; margin-top: 1.5rem;">
+            <p style="font-size: 0.875rem; color: var(--text-muted);">
+                Already have an account? <a href="{{ url_for('auth.login') }}"
+                    style="color: var(--primary-color); text-decoration: none; font-weight: 600;">Sign in</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

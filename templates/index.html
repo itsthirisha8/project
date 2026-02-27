@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero" style="padding: 5rem 0; text-align: center;">
+    <h1
+        style="font-size: 3.5rem; margin-bottom: 1.5rem; background: linear-gradient(135deg, var(--primary-color), #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+        Build Your Professional Career with AI
+    </h1>
+    <p style="font-size: 1.25rem; color: var(--text-muted); max-width: 700px; margin: 0 auto 2.5rem;">
+        Generate 100% ATS-friendly resumes in minutes. Powered by AI to help you land your dream job with professional
+        content suggestions and real-time ATS scoring.
+    </p>
+    <div style="display: flex; gap: 1rem; justify-content: center;">
+        <a href="{{ url_for('auth.signup') }}" class="btn btn-primary"
+            style="padding: 1rem 2rem; font-size: 1rem;">Start Building Now</a>
+        <a href="#features" class="btn btn-outline" style="padding: 1rem 2rem; font-size: 1rem;">View Templates</a>
+    </div>
+</section>
+
+<section id="features" style="padding: 5rem 0;">
+    <div class="grid grid-3">
+        <div class="card">
+            <i class="fas fa-robot" style="font-size: 2rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
+            <h3>AI-Assisted Writing</h3>
+            <p style="color: var(--text-muted);">Let our AI chatbot generate professional summaries and impactful bullet
+                points for your experience.</p>
+        </div>
+        <div class="card">
+            <i class="fas fa-check-circle"
+                style="font-size: 2rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
+            <h3>ATS Friendly</h3>
+            <p style="color: var(--text-muted);">Our templates are designed to pass every Applicant Tracking System. No
+                tables, no columns, just success.</p>
+        </div>
+        <div class="card">
+            <i class="fas fa-chart-line" style="font-size: 2rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
+            <h3>Real-time Scoring</h3>
+            <p style="color: var(--text-muted);">Paste a job description and see your match percentage instantly. Get
+                keyword suggestions to improve your score.</p>
+        </div>
+    </div>
+</section>
+
+<section
+    style="padding: 5rem 0; background-color: var(--card-bg); border-radius: var(--radius); margin-bottom: 5rem; border: 1px solid var(--border-color);">
+    <div style="text-align: center; max-width: 800px; margin: 0 auto;">
+        <h2>Ready to upgrade your resume?</h2>
+        <p style="color: var(--text-muted); margin: 1rem 0 2rem;">Join thousands of job seekers who landed interviews at
+            top tech companies using ResumeAI.</p>
+        <a href="{{ url_for('auth.signup') }}" class="btn btn-primary">Create Free Account</a>
+    </div>
+</section>
+{% endblock %}

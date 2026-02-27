@@ -1,0 +1,10 @@
+flask
+flask-sqlalchemy
+flask-login
+flask-migrate
+python-dotenv
+openai
+flask-bcrypt
+python-docx
+fpdf2
+requests

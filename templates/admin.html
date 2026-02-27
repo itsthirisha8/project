@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="padding: 3rem 0;">
+    <h1 style="margin-bottom: 2rem;">Admin Dashboard</h1>
+
+    <div class="grid grid-2">
+        <div class="card">
+            <h3>System Status</h3>
+            <p>Users: {{ users|length }}</p>
+            <p>Total Resumes: {{ resumes|length }}</p>
+        </div>
+        <div class="card">
+            <h3>Quick Actions</h3>
+            <button class="btn btn-outline">Export All User Data</button>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top: 2rem;">
+        <h3>Registered Users</h3>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
+            <thead>
+                <tr style="text-align: left; border-bottom: 2px solid var(--border-color);">
+                    <th style="padding: 0.75rem;">Username</th>
+                    <th style="padding: 0.75rem;">Email</th>
+                    <th style="padding: 0.75rem;">Role</th>
+                    <th style="padding: 0.75rem;">Resumes</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: 0.75rem;">{{ user.username }}</td>
+                    <td style="padding: 0.75rem;">{{ user.email }}</td>
+                    <td style="padding: 0.75rem;">
+                        <span
+                            style="background: var(--bg-color); padding: 0.2rem 0.5rem; border-radius: 1rem; font-size: 0.75rem;">
+                            {{ user.role }}
+                        </span>
+                    </td>
+                    <td style="padding: 0.75rem;">{{ user.resumes|length }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+
+{% block head %}
+<style>
+    /* ATS Friendly Styles */
+    .resume-preview-container {
+        background-color: white;
+        color: black;
+        width: 210mm;
+        min-height: 297mm;
+        margin: 2rem auto;
+        padding: 20mm;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        font-family: Arial, sans-serif;
+        line-height: 1.4;
+    }
+
+    @media print {
+        body * {
+            visibility: hidden;
+        }
+
+        .resume-preview-container,
+        .resume-preview-container * {
+            visibility: visible;
+        }
+
+        .resume-preview-container {
+            position: absolute;
+            left: 0;
+            top: 0;
+            margin: 0;
+            box-shadow: none;
+            width: 100%;
+            padding: 10mm;
+        }
+
+        .btn-group {
+            display: none;
+        }
+    }
+
+    .resume-header {
+        text-align: center;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #333;
+        padding-bottom: 10px;
+    }
+
+    .resume-header h1 {
+        margin: 0;
+        text-transform: uppercase;
+        font-size: 24pt;
+    }
+
+    .contact-info {
+        font-size: 10pt;
+        margin-top: 5px;
+    }
+
+    .section-heading {
+        font-size: 14pt;
+        font-weight: bold;
+        text-transform: uppercase;
+        border-bottom: 1px solid #333;
+        margin-top: 20px;
+        margin-bottom: 10px;
+    }
+
+    .resume-item {
+        margin-bottom: 15px;
+    }
+
+    .item-header {
+        display: flex;
+        justify-content: space-between;
+        font-weight: bold;
+    }
+
+    .item-sub {
+        font-style: italic;
+        margin-bottom: 5px;
+    }
+
+    .item-desc {
+        font-size: 11pt;
+        white-space: pre-line;
+    }
+
+    .btn-group {
+        position: fixed;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 1rem;
+        z-index: 1000;
+        background: var(--card-bg);
+        padding: 1rem;
+        border-radius: 2rem;
+        box-shadow: var(--shadow);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="btn-group">
+    <a href="{{ url_for('main.builder', resume_id=resume.id) }}" class="btn btn-outline">
+        <i class="fas fa-edit"></i> Edit
+    </a>
+    <button class="btn btn-outline" onclick="window.print()">
+        <i class="fas fa-print"></i> Print / Save PDF
+    </button>
+    <a href="/api/resume/export/docx/{{ resume.id }}" class="btn btn-primary">
+        <i class="fas fa-file-word"></i> Download DOCX
+    </a>
+</div>
+
+<div class="resume-preview-container" id="resume-content">
+    {% set content = resume.get_content() %}
+
+    <div class="resume-header">
+        <h1>{{ content.personal.full_name }}</h1>
+        <div class="contact-info">
+            {{ content.personal.location }} | {{ content.personal.phone }} | {{ content.personal.email }}
+            {% if content.personal.linkedin %} | {{ content.personal.linkedin }}{% endif %}
+            {% if content.personal.website %} | {{ content.personal.website }}{% endif %}
+        </div>
+    </div>
+
+    {% if content.summary %}
+    <div class="section-heading">Professional Summary</div>
+    <div class="item-desc">{{ content.summary }}</div>
+    {% endif %}
+
+    {% if content.experience %}
+    <div class="section-heading">Experience</div>
+    {% for exp in content.experience %}
+    <div class="resume-item">
+        <div class="item-header">
+            <span>{{ exp.title }}</span>
+            <span>{{ exp.dates }}</span>
+        </div>
+        <div class="item-sub">{{ exp.company }}, {{ exp.location }}</div>
+        <div class="item-desc">{{ exp.description }}</div>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if content.education %}
+    <div class="section-heading">Education</div>
+    {% for edu in content.education %}
+    <div class="resume-item">
+        <div class="item-header">
+            <span>{{ edu.degree }}</span>
+            <span>{{ edu.dates }}</span>
+        </div>
+        <div class="item-sub">{{ edu.school }}, {{ edu.location }}</div>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if content.projects %}
+    <div class="section-heading">Projects</div>
+    {% for prj in content.projects %}
+    <div class="resume-item">
+        <div class="item-header">{{ prj.name }}</div>
+        <div class="item-desc">{{ prj.description }}</div>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if content.skills %}
+    <div class="section-heading">Skills</div>
+    <div class="item-desc">{{ content.skills }}</div>
+    {% endif %}
+
+    {% if content.certifications %}
+    <div class="section-heading">Certifications</div>
+    {% for cert in content.certifications %}
+    <div class="resume-item">
+        <strong>{{ cert.title }}</strong> - {{ cert.issuer }}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if content.achievements %}
+    <div class="section-heading">Achievements</div>
+    <div class="item-desc">{{ content.achievements }}</div>
+    {% endif %}
+
+    {% if content.languages %}
+    <div class="section-heading">Languages</div>
+    <div class="item-desc">{{ content.languages }}</div>
+    {% endif %}
+</div>
+{% endblock %}

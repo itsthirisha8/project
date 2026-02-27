@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 4rem auto;">
+    <div class="card">
+        <h2 style="margin-bottom: 1.5rem;"><i class="fas fa-bullseye" style="color: var(--primary-color);"></i> ATS
+            Score Checker</h2>
+        <p style="color: var(--text-muted); margin-bottom: 2rem;">
+            Paste the job description you're applying for. Our AI will analyze your resume and suggest improvements.
+        </p>
+
+        <div class="form-group">
+            <label class="form-label">Job Description</label>
+            <textarea id="job-description" class="form-input" rows="10"
+                placeholder="Paste the job requirements here..."></textarea>
+        </div>
+
+        <button id="btn-analyze" class="btn btn-primary" style="width: 100%; padding: 1rem;">
+            Analyze My Resume
+        </button>
+
+        <div id="analysis-results" style="margin-top: 3rem; display: none;">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <div id="score-circle"
+                    style="width: 120px; height: 120px; border-radius: 50%; border: 8px solid var(--primary-color); display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 2rem; font-weight: 800;">
+                    0%
+                </div>
+                <h3 style="margin-top: 1rem;">Match Score</h3>
+            </div>
+
+            <div class="grid grid-2">
+                <div>
+                    <h4 style="margin-bottom: 1rem;"><i class="fas fa-tags"></i> Missing Keywords</h4>
+                    <ul id="missing-keywords" style="list-style: none; padding: 0;">
+                        <!-- Keywords will be added here -->
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="margin-bottom: 1rem;"><i class="fas fa-lightbulb"></i> Suggestions</h4>
+                    <ul id="suggestions-list" style="list-style: none; padding: 0;">
+                        <!-- Suggestions will be added here -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('btn-analyze').addEventListener('click', async () => {
+        const jd = document.getElementById('job-description').value;
+        const btn = document.getElementById('btn-analyze');
+        const results = document.getElementById('analysis-results');
+
+        if (!jd.trim()) return alert("Please paste a job description.");
+
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing...';
+
+        const resumeId = window.location.pathname.split('/').pop();
+
+        try {
+            // Fetch resume content first
+            const resumeRes = await fetch(`/api/resume/${resumeId}`);
+            const resumeData = await resumeRes.json();
+            const resumeText = JSON.stringify(resumeData.content);
+
+            const response = await fetch('/api/ai/ats_score', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    resume_text: resumeText,
+                    job_description: jd
+                })
+            });
+            const data = await response.json();
+
+            // Update UI
+            document.getElementById('score-circle').innerText = data.score + '%';
+
+            const keywordsList = document.getElementById('missing-keywords');
+            keywordsList.innerHTML = '';
+            data.missing_keywords.forEach(kw => {
+                const li = document.createElement('li');
+                li.style.cssText = "background: #fee2e2; color: #991b1b; padding: 0.25rem 0.5rem; border-radius: 0.25rem; margin-bottom: 0.5rem; font-size: 0.875rem;";
+                li.innerText = kw;
+                keywordsList.appendChild(li);
+            });
+
+            const sugList = document.getElementById('suggestions-list');
+            sugList.innerHTML = '';
+            data.suggestions.forEach(sug => {
+                const li = document.createElement('li');
+                li.style.cssText = "background: #dcfce7; color: #166534; padding: 0.5rem; border-radius: 0.25rem; margin-bottom: 0.5rem; font-size: 0.875rem;";
+                li.innerText = sug;
+                sugList.appendChild(li);
+            });
+
+            results.style.display = 'block';
+            results.scrollIntoView({ behavior: 'smooth' });
+        } catch (error) {
+            alert("Analysis failed. Ensure your OpenAI API key is valid.");
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = 'Analyze My Resume';
+        }
+    });
+</script>
+{% endblock %}
